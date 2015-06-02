@@ -1,3 +1,2 @@
 # GSM_CE
-Estimating and cancelling the channel effects on a GSM signal.
-
+Channel Estimation and Equalization of a GMSK modulated GSM training sequence with AWGN noise.
