@@ -23,7 +23,7 @@ clc;
 
 % Input Parameters
 
-SNR = (0:2:20)';                            % SNR Values in dB
+SNR = (-10:2:20)';                            % SNR Values in dB
 N_iterations = input('Number of Iterations : ');         % maximum number of iterations
 eq_selection = input('Select the equalizer (1=LS,2=ZFE) : ');
 BT = 0.3;                                   % BT product of the filter
@@ -91,7 +91,7 @@ for snr_calc = 1:length(SNR)
         rx_signal = conv(h,tx_signal);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AWGN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        awgn_noise = awgn(rx_signal, snr_calc);           % adds white gaussian noise to the input signal
+        awgn_noise = awgn(rx_signal, SNR(snr_calc));           % adds white gaussian noise to the input signal
         rx_signal = rx_signal + awgn_noise;
         
         
