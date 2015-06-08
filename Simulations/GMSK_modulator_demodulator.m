@@ -26,6 +26,7 @@ clc;
 SNR = (-10:2:20)';                            % SNR Values in dB
 N_iterations = input('Number of Iterations : ');         % maximum number of iterations
 eq_selection = input('Select the equalizer (1=LS,2=ZFE) : ');
+no_of_taps = input('Select the number of taps in the channel (5,8,11,14 taps) : ');
 BT = 0.3;                                   % BT product of the filter
 Tb = 1e-6;                                  % bit duration
 B = BT/Tb;                                  % Bandwidth
@@ -68,26 +69,33 @@ for snr_calc = 1:length(SNR)
 %   ('h' is the Channel Impulse Response coefficients)
 %   When choosing a particular value of 'h' make sure the 'eq_rx_signal'
 %   command is also changed which appears after cancelling the channel effects.
-
+    if no_of_taps == 5
           h = [0.0007,0.2605,0.9268,0.2605,0.0007]';              
 %           eq_rx_signal = rx_signal(3:end-2);
 %           eq_rx_signal = rx_signal(5:end-4);          When Equalizing
+ 
+    elseif no_of_taps == 8
 
-
-%           h = [0.0007,0.0315,0.2605,0.7057,0.9268,0.7057,0.2605,0.0315]';                 
+          h = [0.0007,0.0315,0.2605,0.7057,0.9268,0.7057,0.2605,0.0315]';                 
 %           eq_rx_signal = rx_signal(5:end-3);
 %           eq_rx_signal = rx_signal(9:end-6);          When Equalizing
+  
+    elseif no_of_taps == 11
 
-
-%           h = [0.0007,0.0108,0.0756,0.2605,0.5542,0.8272,0.9268,0.8272,0.5542,0.2605,0.0756]';        
+          h = [0.0007,0.0108,0.0756,0.2605,0.5542,0.8272,0.9268,0.8272,0.5542,0.2605,0.0756]';        
 %           eq_rx_signal = rx_signal(7:end-4);
 %           eq_rx_signal = rx_signal(13:end-8);         When Equalizing
 
 
-%           h = [0.0007,0.0061,0.0315,0.1076,0.2605,0.4789,0.7057,0.8692,0.9268,0.8692,0.7057,0.4789,0.2605,0.1076]';       
+    elseif no_of_taps == 14
+          h = [0.0007,0.0061,0.0315,0.1076,0.2605,0.4789,0.7057,0.8692,0.9268,0.8692,0.7057,0.4789,0.2605,0.1076]';       
 %           eq_rx_signal = rx_signal(9:end-5);  
 %           eq_rx_signal = rx_signal(16:end-11);        When Equalizing 
 
+    else
+        fprintf('Error: Select the number of taps from the mentioned values')
+    end
+        
         rx_signal = conv(h,tx_signal);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AWGN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -163,8 +171,30 @@ for snr_calc = 1:length(SNR)
         
 
        rx_signal = conv(1/w,rx_signal);         % cancelling the channel efects
-       eq_rx_signal = rx_signal(5:end-4);       % Put the value according to the selected CIR 'h'
+       
+%        eq_rx_signal = rx_signal(5:end-4);       % Put the value according to the selected CIR 'h'
+    if no_of_taps == 5
+%           eq_rx_signal = rx_signal(3:end-2);
+          eq_rx_signal = rx_signal(5:end-4);          %When Equalizing
+ 
+    elseif no_of_taps == 8
 
+%           h = [0.0007,0.0315,0.2605,0.7057,0.9268,0.7057,0.2605,0.0315]';                 
+%           eq_rx_signal = rx_signal(5:end-3);
+          eq_rx_signal = rx_signal(9:end-6);          %When Equalizing
+  
+    elseif no_of_taps == 11
+
+%           h = [0.0007,0.0108,0.0756,0.2605,0.5542,0.8272,0.9268,0.8272,0.5542,0.2605,0.0756]';        
+%           eq_rx_signal = rx_signal(7:end-4);
+          eq_rx_signal = rx_signal(13:end-8);         %When Equalizing
+
+
+    elseif no_of_taps == 14
+%           h = [0.0007,0.0061,0.0315,0.1076,0.2605,0.4789,0.7057,0.8692,0.9268,0.8692,0.7057,0.4789,0.2605,0.1076]';       
+%           eq_rx_signal = rx_signal(9:end-5);  
+          eq_rx_signal = rx_signal(16:end-11);        %When Equalizing 
+    end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Demodulation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        %    After cancelling channel effects
@@ -240,4 +270,9 @@ hold off
 % legend('Tx I Q data','Rx I Q data after filtering')
 % xlabel('In Phase');ylabel('Quadrature')
 
+figure
+stem(rx_signal)
+hold on
+stem(tx_signal,'*')
+legend('Equalized Received Signal','Transmitted Signal')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
