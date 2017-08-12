@@ -146,7 +146,7 @@ for snr_calc = 1:length(SNR)
         Xt = X1';                                   % Hetmitian transpose matrux is the transpose of the complex conjugate of a matrix
         inverse = inv(Xt*X);
         multi = (Xt'*inverse);
-        w = (rx_signal*multi)';                     % Channel Estimation values for each iteration
+        w = (rx_signal*multi)'./2;                     % Channel Estimation values for each iteration
     elseif eq_selection == 2
     % Zero Forcing Equalizer
         N1 = 300;
@@ -237,15 +237,15 @@ ber_normal = [SNR ber_total_normal']        % BER vs SNR without equalization
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Plotting the Figures %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(1)
-semilogy(SNR,ber_total_eq,'linewidth',2);hold on
-semilogy(SNR,ber_total_normal, '-*','linewidth',2);
-set(gca,'FontSize',16)
-xlabel('SNR [dB]')
-ylabel('BER')
-legend('Equalized Output','Without Equalization')
-grid on
-hold off
+% figure(1)
+% semilogy(SNR,ber_total_eq,'linewidth',2);hold on
+% semilogy(SNR,ber_total_normal, '-*','linewidth',2);
+% set(gca,'FontSize',16)
+% xlabel('SNR [dB]')
+% ylabel('BER')
+% legend('Equalized Output','Without Equalization')
+% grid on
+% hold off
 % 
 % figure(2);
 % subplot(2,2,1);stem(data);title('Input data');xlabel('Time');ylabel('Amplitude');
@@ -259,20 +259,20 @@ hold off
 % stem(nrz_out_eq(3:length(nrz_out_eq)-3),'*');hold on
 % stem(nrz_data)
 %   
-% figure(4)
-% plot(h);hold on
-% plot(w,'*');
-% legend('Channel Impairements','Estimated Channel')
+figure(4)
+plot(h);hold on
+plot(w,'r');
+legend('Channel Impairements','Estimated Channel')
 % 
 % figure(5)
 % scatter(I_data,Q_data);hold on
 % scatter(I_rx_eq,Q_rx_eq)
 % legend('Tx I Q data','Rx I Q data after filtering')
 % xlabel('In Phase');ylabel('Quadrature')
-
-figure
-stem(rx_signal)
-hold on
-stem(tx_signal,'*')
-legend('Equalized Received Signal','Transmitted Signal')
+% 
+% figure
+% stem(rx_signal)
+% hold on
+% stem(tx_signal,'*')
+% legend('Equalized Received Signal','Transmitted Signal')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
